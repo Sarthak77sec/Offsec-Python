@@ -1,6 +1,6 @@
 import socket
 target_ip="192.168.1.2"
-target_port=9997
+target_port=161
 
 #create a socket layer
 client=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
