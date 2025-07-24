@@ -5,7 +5,7 @@ server_port = 9998
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((server_ip, server_port))
-client.send(b"Hello, Server!")
+client.send(b"Hello, hello there")
 response = client.recv(4096)
 print(response.decode())
 client.close()
