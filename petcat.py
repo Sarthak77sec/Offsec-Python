@@ -20,5 +20,22 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent('''Example:
             petcat.py -t 192.168.108 -p 555 -l -c #command shell
+            petcat.py -t 192.168.108 -p 555 -l -u=my.txt #upload a file                   
+            petcat.py -t 192.168.108 -p 555 -l -e=\"cat /etc/passwd\" #execute a command
+            echo 'ABC' | ./petcat.py -t 192.168.108 -p 135 #echo text to server port 135
+            petcat.py -t 192.168.1.108 -p 555 #connect to server                                   
+        '''))
+parser.add_argument('-c', '--command', action='store_true', help='command shell')
+parser.add_argument('-e', '--execute', help='execute specified command')
+parser.add_argument('-l', '--listen', action='store_true', help='listen on which port')
+parser.add_argument('-p', '--port', type=int, default=555, help='specified port')
+parser.add_argument('-t', '--target', default='192.168.1.109',help='specify the target IP')
+parser.add_argument('-u', '--upload', help='uplaod the file')
+args=parser.parse_args()
+if args.listen:
+    buffer= ''
+else:
+    buffer = sys.stdin.read()
 
-                               '''))    
+pc=Petcat(args, buffer.encode())
+pc.run()
