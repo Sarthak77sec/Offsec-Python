@@ -32,10 +32,24 @@ parser.add_argument('-p', '--port', type=int, default=555, help='specified port'
 parser.add_argument('-t', '--target', default='192.168.1.109',help='specify the target IP')
 parser.add_argument('-u', '--upload', help='uplaod the file')
 args=parser.parse_args()
-if args.listen:
+if args.listen:#when listning the buffer will be empty cause we dont have to send the data immidiatly
     buffer= ''
 else:
-    buffer = sys.stdin.read()
+    buffer = sys.stdin.read()#else we will serve as a client and the buffer will store the commands from the command line output
 
 pc=Petcat(args, buffer.encode())
 pc.run()
+
+#Petcat class that will hold the args
+class Petcat:
+    def __init__(self,args,buffer=None):
+        self.args=args
+        self.buffer=buffer
+        self.socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        self.socket.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+
+    def run(self):
+        if self.args.listen:
+            self.listen()
+        else:
+            self.send()
