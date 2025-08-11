@@ -53,3 +53,35 @@ class Petcat:
             self.listen()
         else:
             self.send()
+#declaring the send function
+def send(self):
+    self.socket.connect((self.args.target,self.args.port))
+    if self.buffer:
+        self.socket.send(self.buffer)
+
+    try:
+        while True:#runs this into and infinite loop
+            recv_len=1#defines the starting loop for the loop
+            response=''#storse the data that is send by the user 
+            while recv_len:#start a loop to recieve data from the target
+                data = self.socket.recv(4096)#this will recieve 4096 bits of data
+                recv_len=len(data)
+                rseponse+=data.decode()
+                if recv_len < 4096: 
+                    break
+                if response:
+                    print(response)
+                    buffer= input('> ')
+                    buffer+='\n'
+                    self.socket.send(buffer.encode())
+    except KeyboardInterrupt:
+        print('user terminated.')
+        self.socket.close()
+        sys.exit()
+
+def listen(self):
+    self.socket.bind((self.args.target,self.args.port))
+    self.socket.listen(5)
+    while True:
+        client_socket,_=self.socket.accept()
+        client_thread=self.handle
