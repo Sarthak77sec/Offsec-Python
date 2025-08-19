@@ -66,7 +66,7 @@ def send(self):
             while recv_len:#start a loop to recieve data from the target
                 data = self.socket.recv(4096)#this will recieve 4096 bits of data
                 recv_len=len(data)
-                rseponse+=data.decode()
+                rseponse+=data.decode() 
                 if recv_len < 4096: 
                     break
                 if response:
@@ -84,4 +84,7 @@ def listen(self):
     self.socket.listen(5)
     while True:
         client_socket,_=self.socket.accept()
-        client_thread=self.handle
+        client_thread=threading.Thread(
+            target=self.handle,args=(client_socket,)
+        )
+        client_thread.start()
