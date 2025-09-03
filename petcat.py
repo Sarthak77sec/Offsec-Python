@@ -88,3 +88,18 @@ def listen(self):
             target=self.handle,args=(client_socket,)
         )
         client_thread.start()
+        #function for handling the overall operation in the program
+def handle(self,client_socket):
+    if self.args.execute:
+       output = execute(self.args.execute)
+       client_socket.send(output.encode())
+       
+    elif self.args.upload:
+         file_buffer=b''
+         while True:
+              data= client_socket.recv(4096)
+              if data:
+                 file_buffer+=data
+              else:
+                   break
+         
