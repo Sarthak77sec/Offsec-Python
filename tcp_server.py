@@ -2,7 +2,7 @@ import socket
 import threading
 
 ip="127.0.0.1"
-port=9998
+port=444
 
 def main():
     server=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
