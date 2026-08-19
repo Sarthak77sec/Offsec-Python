@@ -17,4 +17,10 @@ def hexdump(src,length=16,show=True):
         printable=word.translate(HEX_FILTER)
 
         hexa=' '.join([f'{ord(c)}:02X' for c in word])
+        hexwidth=length*3
         results.append(f'{i:04x} {hexa:<{hexwidth}} {printable}')
+        if show:
+            for line in results:
+                print(line)
+            else:
+                return results
