@@ -19,8 +19,21 @@ def hexdump(src,length=16,show=True):
         hexa=' '.join([f'{ord(c)}:02X' for c in word])
         hexwidth=length*3
         results.append(f'{i:04x} {hexa:<{hexwidth}} {printable}')
-        if show:
+        if show:# if user wants to see data show it
             for line in results:
                 print(line)
             else:
                 return results
+#function for recieve connection
+def recieve_from(connection):
+    buffer=b""
+    connection.settimeout(5)
+    try:
+        while True:
+            data=connection.recv(4096)
+            if not data:
+                break 
+            buffer += data
+    except Exception as e:
+        pass
+    return buffer
