@@ -44,3 +44,42 @@ def request_handler(buffer):
 def response_handler(buffer):
     #perform packer modifiction
     return buffer
+
+def proxy_handler(client_socket,remote_host,remote_port,recieve_first):
+    remote_socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    remote_socket.connect((remote_host,remote_port))
+
+    if recieve_first:
+        remote_buffer=recieve_from(remote_socket)
+        hexdump(remote_buffer)
+    else:
+        remote_buffer=b""
+
+    remote_buffer=response_handler(remote_buffer)
+    if len(remote_buffer):
+        print("[<==] sending %d bytes to localhost." % len(remote_buffer))
+        client_socket.sendall(remote_buffer)
+
+    while True:
+        local_buffer=recieve_from(client_socket)
+        if len(local_buffer):
+            print('[==>] recieved %d from localhost.' % len(local_buffer))
+            hexdump(local_buffer)
+            local_buffer=request_handler(local_buffer)
+            if len(local_buffer):
+                remote_socket.sendall(local_buffer)
+                print('[==>] sent to remote.')
+
+        remote_buffer=recieve_from(remote_socket)
+        if len(remote_buffer):
+            print('[<==] recieved %d from remote.' % len(remote_buffer))
+            hexdump(remote_buffer)
+            remote_buffer=response_handler(remote_buffer)
+            if len(remote_buffer):
+                client_socket.sendall(remote_buffer)
+                print('[<==] sent to localhost.')
+
+        if not len(local_buffer) and not len(remote_buffer):
+            client_socket.close()
+            remote_socket.close()
+            break
